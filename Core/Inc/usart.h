@@ -22,6 +22,8 @@
 #define __USART_H__
 
 #ifdef __cplusplus
+
+
 extern "C" {
 #endif
 
@@ -29,6 +31,8 @@ extern "C" {
 #include "main.h"
 
 /* USER CODE BEGIN Includes */
+  extern uint8_t uart1_rx_data;
+  extern uint8_t uart1_rx_flag;
 
 /* USER CODE END Includes */
 

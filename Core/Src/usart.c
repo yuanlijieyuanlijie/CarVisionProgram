@@ -22,11 +22,16 @@
 
 /* USER CODE BEGIN 0 */
 
+uint8_t uart1_rx_data;
+uint8_t uart1_rx_flag;
+
 /* USER CODE END 0 */
 
 UART_HandleTypeDef huart1;
 
 /* USART1 init function */
+
+
 
 void MX_USART1_UART_Init(void)
 {
@@ -51,9 +56,19 @@ void MX_USART1_UART_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN USART1_Init 2 */
-
+  //启动接收中断
+  HAL_UART_Receive_IT(&huart1, &uart1_rx_data, 1);
   /* USER CODE END USART1_Init 2 */
 
+}
+
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
+  if (huart->Instance == USART1) {
+    uart1_rx_flag = 1; //标记接收到的数据
+
+    //再次启动接收
+    HAL_UART_Receive_IT(&huart1, &uart1_rx_data, 1);
+  }
 }
 
 void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)

@@ -80,6 +80,9 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
+  char message[64];
+  sprintf(message, "程序启动！");
+  SendText(message);
   char buffer[64];
   /* USER CODE END 1 */
 
@@ -116,31 +119,47 @@ int main(void)
 
     //HAL_Delay(1000);
     HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
-    HAL_Delay(1000);
+    HAL_Delay(100);
     HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
-    HAL_Delay(1000);
-    printf("Hello from STM32\r\n");
-    SendText("Helo\r\n");
-    // 电机1 正转 50% 占空比
-    Motor_SetDirection(1, 1);
-    Motor_SetSpeed(1, 500);
+    HAL_Delay(100);
+    //printf("Hello from STM32\r\n");
+    if (uart1_rx_flag) {
+      uart1_rx_flag = 0;
+      switch (uart1_rx_data) {
+        case 'F':
+          Motor_SetDirection(1, 1);
+          Motor_SetSpeed(1, 500);// 电机1 正转 50% 占空比
+          sprintf(buffer, "Motor1 Dir: %d, Speed: %d\r\n", motor1_dir, motor1_pwm);
+          SendText(buffer);
+          break;
+        case 'G':
+          Motor_SetDirection(2, 0);
+          Motor_SetSpeed(2, 800);// 电机2 反转 80%
+          sprintf(buffer, "Motor2 Dir: %d, Speed: %d\r\n", motor2_dir, motor2_pwm);
+          SendText(buffer);
+          break;
+        case 'S':Motor_SetSpeed(1, 0);// 停止电机
+          break;
+        case 'P':Motor_SetSpeed(2, 0);
+          break;
+      }
+      HAL_UART_Transmit(&huart1, &uart1_rx_data, 1, 100);
+    }
+
 
     // 打印电机1状态
-    sprintf(buffer, "Motor1 Dir: %d, Speed: %d\r\n", motor1_dir, motor1_pwm);
-    SendText(buffer);
-    HAL_Delay(1000);  // 每秒更新一次
+    //sprintf(buffer, "Motor1 Dir: %d, Speed: %d\r\n", motor1_dir, motor1_pwm);
+    //SendText(buffer);
+    //HAL_Delay(1000);  // 每秒更新一次
 
-      // 电机2 反转 80%
-    Motor_SetDirection(2, 0);
-    Motor_SetSpeed(2, 800);
+
+
     // 打印电机2状态
-    sprintf(buffer, "Motor2 Dir: %d, Speed: %d\r\n", motor2_dir, motor2_pwm);
-    SendText(buffer);
-    HAL_Delay(2000);
+    //sprintf(buffer, "Motor2 Dir: %d, Speed: %d\r\n", motor2_dir, motor2_pwm);
+    //SendText(buffer);
+    //HAL_Delay(2000);
 
-      // 停止电机
-    Motor_SetSpeed(1, 0);
-    Motor_SetSpeed(2, 0);
+
     HAL_Delay(1000);
 
     /* USER CODE END WHILE */
