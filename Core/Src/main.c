@@ -27,6 +27,7 @@
 #include "../../User/Inc/motor.h"
 #include "stdio.h"
 #include "string.h"
+#include "stm32f103xb.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -106,6 +107,7 @@ int main(void)
   MX_GPIO_Init();
   MX_TIM2_Init();
   MX_USART1_UART_Init();
+  MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
 
 
@@ -126,13 +128,18 @@ int main(void)
     if (uart1_rx_flag) {
       uart1_rx_flag = 0;
       switch (uart1_rx_data) {
-        case 'F':
+        case 'Obstacle Detected':
+          //速度
+          Motor_SetSpeed(2, 0);
+          Motor_SetSpeed(1, 0);
+          //方向
           Motor_SetDirection(1, 1);
-          Motor_SetSpeed(1, 500);// 电机1 正转 50% 占空比
+          Motor_SetDirection(2, 0);
+
           sprintf(buffer, "Motor1 Dir: %d, Speed: %d\r\n", motor1_dir, motor1_pwm);
           SendText(buffer);
           break;
-        case 'G':
+        case 'CLEAR':
           Motor_SetDirection(2, 0);
           Motor_SetSpeed(2, 800);// 电机2 反转 80%
           sprintf(buffer, "Motor2 Dir: %d, Speed: %d\r\n", motor2_dir, motor2_pwm);
@@ -143,7 +150,7 @@ int main(void)
         case 'P':Motor_SetSpeed(2, 0);
           break;
       }
-      HAL_UART_Transmit(&huart1, &uart1_rx_data, 1, 100);
+      HAL_UART_Transmit(&huart3, &uart1_rx_data, 1, 100);
     }
 
 
@@ -158,6 +165,8 @@ int main(void)
     //sprintf(buffer, "Motor2 Dir: %d, Speed: %d\r\n", motor2_dir, motor2_pwm);
     //SendText(buffer);
     //HAL_Delay(2000);
+    const char* ssid = "CU_Mxn3";
+    const char* password = "3cj5swaf";
 
 
     HAL_Delay(1000);

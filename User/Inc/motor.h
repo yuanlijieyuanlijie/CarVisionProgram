@@ -11,7 +11,7 @@ extern int motor1_pwm;
 extern int motor2_dir;
 extern int motor2_pwm;
 void Motor_SetSpeed(uint8_t channel,uint16_t duty);
-void Motor_SetDirection(uint8_t channel,uint16_t duty);
+void Motor_SetDirection(uint8_t channel,uint16_t dir);
 void Motor_Init(void);
 
 #endif //MOTOR_H

@@ -22,8 +22,6 @@
 #define __USART_H__
 
 #ifdef __cplusplus
-
-
 extern "C" {
 #endif
 
@@ -38,11 +36,14 @@ extern "C" {
 
 extern UART_HandleTypeDef huart1;
 
+extern UART_HandleTypeDef huart3;
+
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */
 
 void MX_USART1_UART_Init(void);
+void MX_USART3_UART_Init(void);
 
 /* USER CODE BEGIN Prototypes */
 

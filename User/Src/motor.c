@@ -5,6 +5,7 @@
 #include "main.h"
 #include "memory.h"
 #include "tim.h"
+#include "motor.h"
 
 
 int motor1_dir = 0;
@@ -33,7 +34,7 @@ void Motor_SetSpeed(uint8_t channel,uint16_t duty) {
 }
 
 //设置电机方向（控制电机驱动的IN引脚）
-void Motor_SetDirection(uint8_t motor,uint8_t dir) {
+void Motor_SetDirection(uint8_t motor,uint16_t dir) {
     if (motor == 1) {
         HAL_GPIO_WritePin(GPIOA,GPIO_PIN_2,dir?GPIO_PIN_SET:GPIO_PIN_RESET);
         HAL_GPIO_WritePin(GPIOA,GPIO_PIN_3,dir?GPIO_PIN_RESET:GPIO_PIN_SET);
